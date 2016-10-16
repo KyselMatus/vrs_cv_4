@@ -52,7 +52,7 @@ void adc_init(void)
 GPIO_InitTypeDef GPIO_InitStructure;
 ADC_InitTypeDef ADC_InitStructure;
 /* Enable GPIO clock */
-RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);//Opravi a upravi
+RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
 /* Configure ADCx Channel 2 as analog input */
 
 GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 ;
@@ -92,7 +92,7 @@ ADC_SoftwareStartConv(ADC1);
 
 void led_init(void)
 {
-	 RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+	 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
 	    GPIO_InitTypeDef gpioInitStruc;
 
@@ -108,15 +108,15 @@ void led_init(void)
 int which_button(uint32_t AD_value)
 {
 	int button_state;
-	if(AD_value>=3940 && AD_value<=3955 )
+	if(AD_value>=3940 && AD_value<=3955 )		// ziadne tlacidlo nie je stlacene
 		button_state= 0;
-	else if (AD_value>=2000 && AD_value<=2020)
+	else if (AD_value>=2000 && AD_value<=2020)	// stlacene tlacidlo c.1
 		button_state= 1;
-	else if (AD_value>=2880 && AD_value<=2930)
+	else if (AD_value>=2880 && AD_value<=2930)	// stlacene tlacidlo c.2
 		button_state= 2;
-	else if (AD_value>=3440 && AD_value<=3465)
+	else if (AD_value>=3440 && AD_value<=3465)  // stlacene tlacidlo c.3
 		button_state= 3;
-	else if (AD_value>=3640 && AD_value<=3670)
+	else if (AD_value>=3640 && AD_value<=3670)	// stlacene tlacidlo c.4
 		button_state= 4;
 	else button_state = -1;
 
@@ -162,13 +162,14 @@ int main(void)
   int i = 0;
   uint32_t AD_value;
 
-  adc_init();		// volanie funkcie prevodníka
+  adc_init();										// inicializacia prevodnika
 
+  //--------Spustenie prevodu-----------------------
   ADC_SoftwareStartConv(ADC1);
   while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)){}
   AD_value=ADC_GetConversionValue(ADC1);
 
-  ///----------
+  //--------Uloha-2---------------------------------
 
   led_init();
   work(which_button(AD_value));
